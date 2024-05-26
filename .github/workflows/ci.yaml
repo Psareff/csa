@@ -24,8 +24,8 @@ jobs:
           cd build
           ./TestsServer
           cd ..
-      -run: sh http_cli.sh
-      -run: sh http_serv.sh
+      - run: sh http_cli.sh
+      - run: sh http_serv.sh
       - name: Upload Server artifact
         uses: actions/upload-artifact@v3
         with:
