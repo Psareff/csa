@@ -1,4 +1,5 @@
-#pragma once
+#ifndef USER_CONTAINER_H_
+#define USER_CONTAINER_H_
 
 #include "User.hpp"
 
@@ -20,3 +21,5 @@ int get_privileges(std::string name, std::string pass)
 			return i.priv;
 	return -1;
 }
+
+#endif // USER_CONTAINER_H_

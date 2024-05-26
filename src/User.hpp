@@ -1,7 +1,9 @@
-#pragma once
+#ifndef USER_H_
+#define USER_H_
 
 #include <string>
 #include "nlohmann/json.hpp"
+
 
 struct user
 {
@@ -55,3 +57,5 @@ bool user_is_admin(const user &user)
 {
 	return user.priv == user::admin ? true : false;
 }
+
+#endif // USER_H_

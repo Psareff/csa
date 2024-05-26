@@ -1,6 +1,5 @@
-
-#ifndef _UTILITY_HPP_
-#define _UTILITY_HPP_
+#ifndef UTILITY_H_
+#define UTILITY_H_
 
 #include <cstdint>
 #include <string>
@@ -15,4 +14,4 @@ namespace utils
     std::vector<std::string> Split(const std::string &s, const char *delim);
 }
 
-#endif
+#endif // UTILITY_H_

@@ -14,3 +14,25 @@ jobs:
       - run: sudo apt-get install gcc g++ make cmake
       - run: mkdir -p build && cd build && cmake .. && make
       - run: cd ..
+      - name: Client-sided tests
+        run: |
+          cd build
+          ./TestsClient
+          cd ..
+      - name: Server-sided tests
+        run: |
+          cd build
+          ./TestsServer
+          cd ..
+      -run: sh http_cli.sh
+      -run: sh http_serv.sh
+      - name: Upload Server artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: ./HTTPServer.deb
+      - name: Upload Client artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: ./HTTPClient.deb
