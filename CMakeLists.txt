@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(MyHTTPServer)
+project(HTTPServer)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Add dependencies
 include(FetchContent)
 FetchContent_Declare(
   libhv
@@ -18,8 +17,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(libhv nlohmann_json)
 
-# Add the executable
-add_executable(MyHTTPServer src/main.cpp src/Utility.cpp)
+add_executable(HTTPServer src/server.cpp src/Utility.cpp)
+add_executable(HTTPClient src/client.cpp src/Utility.cpp)
 
-# Link libraries
-target_link_libraries(MyHTTPServer hv_static nlohmann_json::nlohmann_json)
+target_link_libraries(HTTPServer hv_static nlohmann_json::nlohmann_json)
+target_link_libraries(HTTPClient hv_static nlohmann_json::nlohmann_json)

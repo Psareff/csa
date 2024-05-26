@@ -10,13 +10,6 @@ std::vector<user> users;
 int add_user(const user &usr)
 {
 	users.push_back(usr);
-	for (auto i : users)
-	{
-		nlohmann::json j;
-		user_cast_to_json(j, i);
-		std::cout << j.dump(4) << std::endl;
-	}
-
 	return 0;
 }
 

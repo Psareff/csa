@@ -64,12 +64,6 @@ int main()
 {
 	init();
 
-	struct user common;
-	common.name = "Ilya";
-	common.password = "password";
-	common.priv = user::common;
-	add_user(common);
-
 	HttpService router;
 
 	router.GET("/users", [](HttpRequest* req, HttpResponse* resp) {
