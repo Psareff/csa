@@ -10,6 +10,7 @@
 int main() {
 while (true)
 {
+	login:
 	clear();
 	std::string login, password;
 	std::cout << "Login: ";
@@ -179,7 +180,6 @@ while (true)
 			case 'Q':
 			case 'q':
 				goto login;
-				break;
 			default:
 				break;
 
@@ -187,7 +187,6 @@ while (true)
 		std::cout << "Press Enter to continue";
 		std::cin.ignore();
 	}
-login:
 }
 	return 0;
 }
