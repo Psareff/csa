@@ -5,7 +5,7 @@ mkdir -p ./deb_http_server/etc/systemd/system
 touch  ./deb_http_server/DEBIAN/control
 
 cat << EOF > ./deb_http_server/DEBIAN/control
-Package: http-server-dcsa
+Package: HTTPServer
 Version: 0.1Pre-Alpha
 Architecture: amd64
 Maintainer: Psareff
@@ -13,7 +13,7 @@ EOF
 
 cp ./build/HTTPServer ./deb_http_server/usr/local/bin/
 
-cp ./build/HTTPServer.service ./deb_http_server/etc/systemd/system/
+cp ./HTTPServer.service ./deb_http_server/etc/systemd/system/
 
 cp ./postinst ./deb_http_server/DEBIAN/
 cp ./prerm ./deb_http_server/DEBIAN/
