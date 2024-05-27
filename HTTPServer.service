@@ -1,0 +1,12 @@
+[Unit]
+Description=HTTP Server service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/HTTPServer
+Restart=always
+User=nobody
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target

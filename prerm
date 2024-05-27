@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+systemctl stop HTTPServer.service
+systemctl disable HTTPServer.service
+
+systemctl daemon-reload
