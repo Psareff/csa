@@ -81,8 +81,7 @@ while (true)
 			case 'A':
 			case '3':
 				{
-					std::string usr, pass;
-					int priv;
+					std::string usr, pass, priv;
 					std::cout << "Enter username: ";
 					std::cin >> usr;
 					std::cout << "Enter password: ";
@@ -100,7 +99,7 @@ while (true)
 					hv::Json jroot;
 					jroot["name"] = usr;
 					jroot["password"] = pass;
-					jroot["privileges"] = priv;
+					jroot["privilege"] = priv;
 
 					std::cout << jroot.dump() << std::endl;
 
@@ -119,13 +118,15 @@ while (true)
 			case 'E':
 			case '4':
 				{
-					std::string old_usr, new_usr, pass;
-					std::cout << "Enter old username: ";
-					std::cin >> old_usr;
+					std::string usr_id, new_usr, pass, priv;
+					std::cout << "Enter user ID: ";
+					std::cin >> usr_id;
 					std::cout << "Enter new username: ";
 					std::cin >> new_usr;
 					std::cout << "Enter password: ";
 					std::cin >> pass;
+					std::cout << "Enter privileges: ";
+					std::cin >> priv;
 					std::cin.ignore();
 
 					http_headers headers;
@@ -137,10 +138,11 @@ while (true)
 					hv::Json jroot;
 					jroot["name"] = new_usr;
 					jroot["password"] = pass;
+					jroot["privilege"] = priv;
 
 					std::cout << jroot.dump() << std::endl;
 
-					auto resp = requests::put(("http://127.0.0.1:8080/user/" + old_usr).c_str(), jroot.dump(), headers);
+					auto resp = requests::put(("http://127.0.0.1:8080/user/" + usr_id).c_str(), jroot.dump(), headers);
 
 					if (resp == NULL)
 					    std::cout << "request failed!" << std::endl;
@@ -156,7 +158,7 @@ while (true)
 			case '5':
 				{
 					std::string usr;
-					std::cout << "Enter username: ";
+					std::cout << "Enter ID: ";
 					std::cin >> usr;
 					std::cin.ignore();
 

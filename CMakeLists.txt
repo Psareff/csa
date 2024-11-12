@@ -19,23 +19,20 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/google/googletest.git
 	GIT_TAG        main
 )
+FetchContent_Declare(
+  pq
+  GIT_REPOSITORY https://github.com/postgres/postgres
+  GIT_TAG master
+)
 
-FetchContent_MakeAvailable(libhv nlohmann_json gtest)
+FetchContent_MakeAvailable(libhv nlohmann_json gtest pq)
 
-add_executable(HTTPServer src/server.cpp src/Utility.cpp)
+add_executable(HTTPServer src/new_server.cpp src/Utility.cpp)
 add_executable(HTTPClient src/client.cpp src/Utility.cpp)
 add_executable(TestsServer src/test_server.cpp src/Utility.cpp)
 add_executable(TestsClient src/test_client.cpp src/Utility.cpp)
 
-target_link_libraries(HTTPServer hv_static nlohmann_json::nlohmann_json)
+target_link_libraries(HTTPServer hv_static nlohmann_json::nlohmann_json pq)
 target_link_libraries(HTTPClient hv_static nlohmann_json::nlohmann_json)
-target_link_libraries(TestsServer hv_static nlohmann_json::nlohmann_json gtest)
+target_link_libraries(TestsServer hv_static nlohmann_json::nlohmann_json gtest pq)
 target_link_libraries(TestsClient hv_static nlohmann_json::nlohmann_json gtest)
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(PQXX libpqxx)
-
-if (PQXX_FOUND)
-    include_directories(${PQXX_INCLUDE_DIRS})
-    link_libraries(${PQXX_LIBRARIES})
-endif()
