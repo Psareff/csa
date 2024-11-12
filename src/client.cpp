@@ -28,6 +28,7 @@ while (true)
 					 "3. 'A'dd new user (only admin)\n"
 					 "4. 'E'dit existing user (only yourself/admin)\n"
 					 "5. 'D'elete exitsing user (only yourself/admin)\n"
+					 "6. 'H'ello user\n"
 					 "q. 'Q'uit to login screen\n";
 		char choice;
 		std::cin >> choice;
@@ -178,6 +179,30 @@ while (true)
 					}
 				}
 
+				break;
+			case 'H':
+			case '6':
+				{
+					std::string usr;
+					std::cout << "Enter user: ";
+					std::cin >> usr;
+					std::cin.ignore();
+
+					http_headers headers;
+
+					headers["Content-Type"] = "application/json";
+					headers["Authorization"] = "Basic " + utils::EncodeBase64(login + ":" + password);
+
+					auto resp = requests::get(("http://127.0.0.1:8080/greet/" + usr).c_str(), headers);
+
+					if (resp == NULL)
+					    std::cout << "request failed!" << std::endl;
+					else
+					{
+						std::cout << resp->status_code << " " << resp->status_message() << std::endl;
+						std::cout << resp->body.c_str() << std::endl;
+					}
+				}
 				break;
 			case 'Q':
 			case 'q':

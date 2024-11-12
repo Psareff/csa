@@ -34,6 +34,25 @@ services:
       retries: 5
     networks:
       - custom_network
+  
+  microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile.microservice
+    networks:
+      - custom_network
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+      - microservice
+    networks:
+      - custom_network
 
 networks:
   custom_network:

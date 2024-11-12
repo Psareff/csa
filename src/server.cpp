@@ -1,4 +1,5 @@
 #include "hv/HttpServer.h"
+#include "hv/requests.h"
 #include <libpq-fe.h>
 
 #include <iostream>
@@ -10,20 +11,22 @@
 using namespace hv;
 using json = nlohmann::json;
 
-PGconn* connectDB() {
-    const char* host = getenv("POSTGRES_HOST");
-    const char* dbname = getenv("POSTGRES_DB");
-    const char* user = getenv("POSTGRES_USER");
-    const char* password = getenv("POSTGRES_PASSWORD");
+PGconn *connectDB()
+{
+    const char *host = getenv("POSTGRES_HOST");
+    const char *dbname = getenv("POSTGRES_DB");
+    const char *user = getenv("POSTGRES_USER");
+    const char *password = getenv("POSTGRES_PASSWORD");
 
     std::string conninfo = "host=" + std::string(host ? host : "localhost") +
                            " dbname=" + std::string(dbname ? dbname : "mydatabase") +
                            " user=" + std::string(user ? user : "myuser") +
                            " password=" + std::string(password ? password : "mypassword");
 
-    PGconn* conn = PQconnectdb(conninfo.c_str());
+    PGconn *conn = PQconnectdb(conninfo.c_str());
 
-    if (PQstatus(conn) != CONNECTION_OK) {
+    if (PQstatus(conn) != CONNECTION_OK)
+    {
         std::cerr << "Connection to database failed: "
                   << PQerrorMessage(conn) << std::endl;
         PQfinish(conn);
@@ -33,14 +36,16 @@ PGconn* connectDB() {
     return conn;
 }
 
-void initDB() {
-    PGconn* conn = connectDB();
-    if (!conn) {
+void initDB()
+{
+    PGconn *conn = connectDB();
+    if (!conn)
+    {
         std::cerr << "Failed to connect to the database for initialization." << std::endl;
         return;
     }
 
-    const char* createTableQuery =
+    const char *createTableQuery =
         "CREATE TABLE IF NOT EXISTS users ("
         "id SERIAL PRIMARY KEY,"
         "name TEXT UNIQUE NOT NULL,"
@@ -48,8 +53,9 @@ void initDB() {
         "privilege TEXT NOT NULL"
         ");";
 
-    PGresult* res = PQexec(conn, createTableQuery);
-    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+    PGresult *res = PQexec(conn, createTableQuery);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
         std::cerr << "Failed to create users table: "
                   << PQerrorMessage(conn) << std::endl;
     }
@@ -58,12 +64,31 @@ void initDB() {
     PQfinish(conn);
 }
 
-int main() {
+int main()
+{
     initDB();
 
     HttpService router;
 
-    router.GET("/users", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/greet/{user_id}", [](HttpRequest *req, HttpResponse *resp)
+               {
+        std::string user_id = req->GetParam("user_id");
+		auto res = requests::get(("http://microservice:5001/greet/" + user_id).c_str());
+
+		if (res == NULL)
+        {
+			std::cout << "request failed!" << std::endl;
+            return 404;
+        }
+			std::cout << res->status_code << " " << res->status_message() << std::endl;
+			std::cout << res->body.c_str() << std::endl;
+            resp->status_code = res->status_code;
+            resp->body = res->body;
+        
+        return 200; });
+
+    router.GET("/users", [](HttpRequest *req, HttpResponse *resp)
+               {
         PGconn* conn = connectDB();
         if (!conn) {
             resp->String("Database connection failed");
@@ -93,10 +118,10 @@ int main() {
 
         PQclear(res);
         PQfinish(conn);
-        return 200;
-    });
+        return 200; });
 
-    router.GET("/user/{user_id}", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/user/{user_id}", [](HttpRequest *req, HttpResponse *resp)
+               {
        std::string user_id = req->GetParam("user_id");
 
         PGconn* conn = connectDB();
@@ -129,10 +154,10 @@ int main() {
 
         PQclear(res);
         PQfinish(conn);
-        return ret;
-    });
+        return ret; });
 
-router.POST("/user", [](HttpRequest* req, HttpResponse* resp) {
+    router.POST("/user", [](HttpRequest *req, HttpResponse *resp)
+                {
     std::cout << "POSTING USER" << std::endl;
     json u;
     try {
@@ -174,10 +199,10 @@ router.POST("/user", [](HttpRequest* req, HttpResponse* resp) {
 
     PQclear(res);
     PQfinish(conn);
-    return 200;
-});
+    return 200; });
 
-    router.PUT("/user/{user_id}", [](HttpRequest* req, HttpResponse* resp) {
+    router.PUT("/user/{user_id}", [](HttpRequest *req, HttpResponse *resp)
+               {
         std::string user_id = req->GetParam("user_id");
         json u = json::parse(req->body);
         std::string name = u["name"];
@@ -205,10 +230,10 @@ router.POST("/user", [](HttpRequest* req, HttpResponse* resp) {
 
         PQclear(res);
         PQfinish(conn);
-        return 200;
-    });
+        return 200; });
 
-    router.Delete("/user/{user_id}", [](HttpRequest* req, HttpResponse* resp) {
+    router.Delete("/user/{user_id}", [](HttpRequest *req, HttpResponse *resp)
+                  {
         std::string user_id = req->GetParam("user_id");
 
         PGconn* conn = connectDB();
@@ -232,8 +257,7 @@ router.POST("/user", [](HttpRequest* req, HttpResponse* resp) {
 
         PQclear(res);
         PQfinish(conn);
-        return 200;
-    });
+        return 200; });
 
     HttpServer server;
     server.registerHttpService(&router);
