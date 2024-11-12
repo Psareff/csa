@@ -1,0 +1,15 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "8080:8080"
+    container_name: http_server
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: http_client

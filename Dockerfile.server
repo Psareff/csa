@@ -1,0 +1,12 @@
+# Dockerfile.server
+FROM debian:unstable-slim
+
+# Set up working directory and copy the HTTPServer binary
+WORKDIR /app
+COPY build/HTTPServer /app/HTTPServer
+
+# Expose the necessary port
+EXPOSE 8080
+
+# Command to run the server
+CMD ["./HTTPServer"]

@@ -31,3 +31,11 @@ target_link_libraries(HTTPServer hv_static nlohmann_json::nlohmann_json)
 target_link_libraries(HTTPClient hv_static nlohmann_json::nlohmann_json)
 target_link_libraries(TestsServer hv_static nlohmann_json::nlohmann_json gtest)
 target_link_libraries(TestsClient hv_static nlohmann_json::nlohmann_json gtest)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PQXX libpqxx)
+
+if (PQXX_FOUND)
+    include_directories(${PQXX_INCLUDE_DIRS})
+    link_libraries(${PQXX_LIBRARIES})
+endif()

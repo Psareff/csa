@@ -1,0 +1,9 @@
+# Dockerfile.client
+FROM debian:unstable-slim
+
+# Set up working directory and copy the HTTPClient binary
+WORKDIR /app
+COPY build/HTTPClient /app/HTTPClient
+
+# Command to run the client
+CMD ["./HTTPClient"]
